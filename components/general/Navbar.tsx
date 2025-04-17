@@ -15,9 +15,10 @@ function Navbar() {
         </h1>
       </Link>
 
-      <Button>bidyut</Button>
-
-      <ThemeToggle />
+      <div className="flex items-center gap-4">
+        <ThemeToggle />
+        <Button>Login</Button>
+      </div>
     </nav>
   );
 }
