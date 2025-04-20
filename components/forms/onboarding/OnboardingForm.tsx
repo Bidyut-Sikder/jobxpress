@@ -1,5 +1,7 @@
+'use client'
+
 import Image from "next/image";
-import React, { useState } from "react";
+import  { useState } from "react";
 import logo from "@/public/logo.png";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -14,7 +16,7 @@ function OnboardingForm() {
     setStep(2);
   };
 
-  const renderStep = (step: number) => {
+  const renderStep = () => {
     switch (step) {
       case 1:
         return <p>User Selection Form</p>;
@@ -32,7 +34,7 @@ function OnboardingForm() {
 
   return (
     <>
-      <div className="flex items-center gap-2 mb-10 bg-red-400 ">
+      <div className="flex items-center gap-2 mb-10 ">
         <Image src={logo} alt="logo" width={50} height={50} />
         <h1 className="text-4xl font-bold">
           Job<span className="text-primary ">Xpress</span>
@@ -40,7 +42,9 @@ function OnboardingForm() {
       </div>
 
       <Card className="max-w-lg w-full">
-        <CardContent></CardContent>
+        <CardContent>
+            {renderStep()}
+        </CardContent>
       </Card>
     </>
   );
