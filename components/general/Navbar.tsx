@@ -2,10 +2,12 @@ import Link from "next/link";
 import React from "react";
 import logo from "@/public/logo.png";
 import Image from "next/image";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { ThemeToggle } from "./ThemeToggle";
+import { auth, signOut } from "@/auth";
 
-function Navbar() {
+async function Navbar() {
+  const session = await auth();
   return (
     <nav className="flex justify-between items-center py-5">
       <Link href="/" className=" flex items-center gap-2">
@@ -17,7 +19,24 @@ function Navbar() {
 
       <div className="flex items-center gap-4">
         <ThemeToggle />
-        <Button>Login</Button>
+
+        {session?.user ? (
+          <form
+            action={async () => {
+              "use server"; //required
+              await signOut({ redirectTo: "/" });
+            }}
+          >
+            <Button>Logout</Button>
+          </form>
+        ) : (
+          <Link
+            className={buttonVariants({ variant: "outline", size: "lg" })}
+            href={"login"}
+          >
+            Login
+          </Link>
+        )}
       </div>
     </nav>
   );

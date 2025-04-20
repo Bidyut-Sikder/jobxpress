@@ -13,9 +13,10 @@ interface SubmitButtonProps {
 }
 
 function SubmitButton({ width, variant, text, icon }: SubmitButtonProps) {
+ 
   const { pending } = useFormStatus();
   return (
-    <Button className={width} variant={variant}>
+    <Button className={width} variant={variant} disabled={pending}>
       {pending ? (
         <>
           {" "}

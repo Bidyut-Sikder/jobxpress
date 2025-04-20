@@ -10,10 +10,11 @@ import {
 
 const LoginForm = async () => {
   const session = await auth();
+ 
 
-  // if (session?.user) {
-  //   return redirect("/");
-  // }
+  if (session?.user) {
+    return redirect("/");
+  }
   return (
     <div className="flex flex-col gap-6">
       <Card>
@@ -119,3 +120,5 @@ const Google = (props: SVGProps<SVGSVGElement>) => (
     />
   </svg>
 );
+
+
