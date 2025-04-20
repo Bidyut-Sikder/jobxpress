@@ -1,0 +1,49 @@
+import Image from "next/image";
+import React, { useState } from "react";
+import logo from "@/public/logo.png";
+import { Card, CardContent } from "@/components/ui/card";
+
+type UserSelectionType = "jobSeeker" | "company" | null;
+
+function OnboardingForm() {
+  const [step, setStep] = useState(1);
+  const [userType, setUserType] = useState<UserSelectionType>(null);
+
+  const handleUserTypeSelection = (type: UserSelectionType) => {
+    setUserType(type);
+    setStep(2);
+  };
+
+  const renderStep = (step: number) => {
+    switch (step) {
+      case 1:
+        return <p>User Selection Form</p>;
+      case 2:
+        return userType === "company" ? (
+          <p>User is a company</p>
+        ) : (
+          <p>User is a job seeker</p>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <>
+      <div className="flex items-center gap-2 mb-10 bg-red-400 ">
+        <Image src={logo} alt="logo" width={50} height={50} />
+        <h1 className="text-4xl font-bold">
+          Job<span className="text-primary ">Xpress</span>
+        </h1>
+      </div>
+
+      <Card className="max-w-lg w-full">
+        <CardContent></CardContent>
+      </Card>
+    </>
+  );
+}
+
+export default OnboardingForm;
