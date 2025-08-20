@@ -6,11 +6,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
+import type { SVGProps } from "react";
+import { auth, signIn } from "@/auth";
+import SubmitButton from "../general/SubmitButton";
+import { redirect } from "next/navigation";
 
 const LoginForm = async () => {
   const session = await auth();
- 
 
   if (session?.user) {
     return redirect("/");
@@ -70,10 +72,6 @@ const LoginForm = async () => {
 
 export default LoginForm;
 
-import type { SVGProps } from "react";
-import { auth, signIn } from "@/auth";
-import SubmitButton from "../general/SubmitButton";
-import { redirect } from "next/navigation";
 const GitHub = (props: SVGProps<SVGSVGElement>) => (
   <svg
     width="1em"
@@ -120,5 +118,3 @@ const Google = (props: SVGProps<SVGSVGElement>) => (
     />
   </svg>
 );
-
-
