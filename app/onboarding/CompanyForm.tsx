@@ -1,5 +1,5 @@
 import { companySchema } from "@/lib/zodSchemas";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -23,6 +23,10 @@ import {
 import { countryList } from "@/lib/countriesList";
 import { Textarea } from "@/components/ui/textarea";
 import { UploadDropzone } from "@/components/general/UploadThingReExported";
+import { createCompany } from "../actions";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import { XIcon } from "lucide-react";
 export default function CompanyForm() {
   const form = useForm<z.infer<typeof companySchema>>({
     resolver: zodResolver(companySchema),
@@ -36,10 +40,25 @@ export default function CompanyForm() {
     },
   });
 
+  const [pending, setPending] = useState(false);
+
+  const onSubmit = async (data: z.infer<typeof companySchema>) => {
+    try {
+      setPending(true);
+      await createCompany(data);
+    } catch (error) {
+      if (error instanceof Error && error.message !== "NEXT_REDIRECT") {
+        console.log("something went wrong.");
+      }
+    } finally {
+      setPending(false);
+    }
+  };
+
   return (
     <Form {...form}>
-      <form className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
           <FormField
             control={form.control}
             name="name"
@@ -58,11 +77,14 @@ export default function CompanyForm() {
             name="location"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Company Name</FormLabel>
-                <Select>
+                <FormLabel>Location </FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select location" />
+                      <SelectValue placeholder="Select location" {...field} />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -90,7 +112,7 @@ export default function CompanyForm() {
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
           <FormField
             control={form.control}
             name="website"
@@ -143,28 +165,52 @@ export default function CompanyForm() {
             <FormItem>
               <FormLabel>Company Logo</FormLabel>
               <FormControl>
-                <UploadDropzone
-                  endpoint="imageUploader"
-                  onClientUploadComplete={(res) => {
-                    // Do something with the response
-                    field.onChange(res[0].url);
-                    console.log("Files: ", res);
-
-                  }}
-                  onUploadError={(error: Error) => {
-                    // Do something with the error.
-                    alert(`ERROR! ${error.message}`);
-                  }}
-                  className="ut-button:bg-primary
+                <div>
+                  {field.value ? (
+                    <div className="relative w-fit">
+                      <Image
+                        src={field.value}
+                        alt="Company Logo"
+                        width={100}
+                        height={100}
+                        className="rounded-lg"
+                      />
+                      <Button
+                        type="button"
+                        variant={"destructive"}
+                        className="absolute -top-2 -right-5"
+                        onClick={() => field.onChange("")}
+                      >
+                        <XIcon className="sixe-4" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <UploadDropzone
+                      endpoint="imageUploader"
+                      onClientUploadComplete={(res) => {
+                        // Do something with the response
+                        field.onChange(res[0].url);
+                        console.log("Files: ", res);
+                      }}
+                      onUploadError={(error: Error) => {
+                        // Do something with the error.
+                        alert(`ERROR! ${error.message}`);
+                      }}
+                      className="ut-button:bg-primary
                    ut-button:text-white ut-button:hover:bg-primary/90
                     ut-label:text-muted-foreground ut-button:py-2 
-                    ut-button:w-full ut-allowed-content:text-muted-foreground border-primary"
-                />
+                    ut-allowed-content:text-muted-foreground border-primary"
+                    />
+                  )}
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+        <Button type="submit" className="w-full" disabled={pending}>
+          {pending ? "Submitting..." : "Continue"}
+        </Button>
       </form>
     </Form>
   );
