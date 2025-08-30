@@ -8,17 +8,20 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import pdf from '@/public/pdf_icon.png'
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { jobSeekerSchema } from "@/lib/zodSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { XIcon } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { createJobSeeker } from "../actions";
 
 function JobSeekerForm() {
+  const [pending, setPending] = useState(false);
   const form = useForm<z.infer<typeof jobSeekerSchema>>({
     resolver: zodResolver(jobSeekerSchema),
     defaultValues: {
@@ -27,9 +30,23 @@ function JobSeekerForm() {
       resume: "",
     },
   });
+
+  const onSubmit = async (data: z.infer<typeof jobSeekerSchema>) => {
+    try {
+      setPending(true);
+      await createJobSeeker(data);
+    } catch (error) {
+      if (error instanceof Error && error.message !== "NEXT_REDIRECT") {
+        console.log("something went wrong.");
+      }
+    } finally {
+      setPending(false);
+    }
+  };
+
   return (
     <Form {...form}>
-      <form className="space-y-6">
+      <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name="name"
@@ -69,8 +86,8 @@ function JobSeekerForm() {
                   {field.value ? (
                     <div className="relative w-fit">
                       <Image
-                        src={field.value}
-                        alt="Company Logo"
+                        src={pdf}
+                        alt="Resume"
                         width={100}
                         height={100}
                         className="rounded-lg"
@@ -102,12 +119,16 @@ function JobSeekerForm() {
                     ut-allowed-content:text-muted-foreground border-primary"
                     />
                   )}
+                  
                 </div>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+        <Button type="submit" className="w-full" disabled={pending}>
+          {pending ? "Submitting..." : "Continue"}
+        </Button>
       </form>
     </Form>
   );
