@@ -31,7 +31,7 @@ const LoginForm = async () => {
             <form
               action={async () => {
                 "use server";
-                await signIn("google", { redirectTo: "/" });
+                await signIn("google", { redirectTo: "/onboarding" });
               }}
             >
               <SubmitButton
@@ -44,7 +44,7 @@ const LoginForm = async () => {
             <form
               action={async () => {
                 "use server";
-                await signIn("github", { redirectTo: "/" });
+                await signIn("github", { redirectTo: "/onboarding" });
               }}
             >
               <SubmitButton

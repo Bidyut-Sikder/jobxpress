@@ -6,6 +6,7 @@ import logo from "@/public/logo.png";
 import { Card, CardContent } from "@/components/ui/card";
 import UserTypeForm from "./UserTypeForm";
 import CompanyForm from "@/app/onboarding/CompanyForm";
+import JobSeekerForm from "@/app/onboarding/JobSeekerForm";
 
 type UserSelectionType = "jobSeeker" | "company" | null;
 
@@ -26,7 +27,7 @@ function OnboardingForm() {
         return userType === "company" ? (
              <CompanyForm />
         ) : (
-          <p>User is a job seeker</p>
+          <JobSeekerForm />
         );
 
       default:
