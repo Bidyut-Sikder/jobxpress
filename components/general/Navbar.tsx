@@ -5,9 +5,11 @@ import Image from "next/image";
 import { Button, buttonVariants } from "../ui/button";
 import { ThemeToggle } from "./ThemeToggle";
 import { auth, signOut } from "@/auth";
+import UserDropDown from "./UserDropDown";
 
 async function Navbar() {
   const session = await auth();
+
   return (
     <nav className="flex justify-between items-center py-5">
       <Link href="/" className=" flex items-center gap-2">
@@ -17,22 +19,22 @@ async function Navbar() {
         </h1>
       </Link>
 
-      <div className="flex items-center gap-4">
+      {/* Desktop navigation */}
+      <div className="hidden md:flex items-center gap-5">
         <ThemeToggle />
-
+        <Link href={"/post-job"} className={buttonVariants({ size: "lg" })}>
+          Post Job
+        </Link>
         {session?.user ? (
-          <form
-            action={async () => {
-              "use server"; //required
-              await signOut({ redirectTo: "/" });
-            }}
-          >
-            <Button>Logout</Button>
-          </form>
+          <UserDropDown
+            name={session.user.name as string}
+            image={session.user.image as string}
+            email={session.user.email as string}
+          />
         ) : (
           <Link
+            href={"/login"}
             className={buttonVariants({ variant: "outline", size: "lg" })}
-            href={"login"}
           >
             Login
           </Link>

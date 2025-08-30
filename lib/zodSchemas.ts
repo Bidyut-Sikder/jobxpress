@@ -19,3 +19,20 @@ export const jobSeekerSchema = z.object({
   about: z.string().min(5, "Please provide more information about yourself."),
   resume: z.string().min(1, "Please upload your resume."),
 });
+
+export const jobSchema = z.object({
+  jobTitle: z.string().min(2, " Title must be at least 2 characters"),
+  employmentType: z.string().min(5, "Please select an employment type."),
+  location: z.string().min(1, "Please select your location."),
+  salaryFrom: z.number().min(1, "Salary from is required."),
+  salaryTo: z.number().min(1, "Salary to is required."),
+  jobDescription: z.string().min(5, "Job description is required."),
+  listingDuration: z.number().min(1, "Listing Duration is required."),
+  benefits: z.array(z.string().min(1, "Please select at least 1 benefit.")),
+  companyName: z.string().min(1, "Company name is required."),
+  companyLocation: z.string().min(1, "Company location name is required."),
+  companyAbout: z.string().min(1, "Company about is required."),
+  companyLogo: z.string().min(1, "Company logo is required."),
+  companyWebsite: z.string().min(1, "Company Website is required."),
+  companyXAccount: z.string().optional(),
+});
