@@ -4,8 +4,14 @@ import StarterKit from "@tiptap/starter-kit";
 import MenuBar from "./MenuBar";
 import TextAlign from "@tiptap/extension-text-align";
 import Typogrophy from "@tiptap/extension-typography";
+import { ControllerRenderProps } from "react-hook-form";
+import { json } from "stream/consumers";
 
-const JobDescriptionEditor = () => {
+interface iAppProps {
+  field: ControllerRenderProps;
+}
+
+const JobDescriptionEditor = ({ field }: iAppProps) => {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -17,9 +23,13 @@ const JobDescriptionEditor = () => {
     editorProps: {
       attributes: {
         class:
-          "prose prose-sm sm:prose lg:prose-lg xl:prose-xl  min-h-[300px] p-4 max-w-none focus:outline-none " ,
+          "prose prose-sm sm:prose lg:prose-lg xl:prose-xl dark:prose-invert  min-h-[300px] p-4 max-w-none focus:outline-none ",
       },
     },
+    onUpdate: ({}) => {
+      field.onChange(JSON.stringify(editor?.getJSON()));
+    },
+    content: field.value ? JSON.parse(field.value) : "",
     immediatelyRender: false,
   });
 

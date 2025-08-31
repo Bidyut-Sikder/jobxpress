@@ -26,6 +26,7 @@ import { countryList } from "@/lib/countriesList";
 import SalaryRangeSelector from "../general/SalaryRangeSelector";
 import { Button } from "../ui/button";
 import JobDescriptionEditor from "../Editor/JobDescriptionEditor";
+import BenefitsSelector from "../general/BenefitsSelector";
 
 const CreateJobForm = () => {
   const form = useForm<z.infer<typeof jobSchema>>({
@@ -160,7 +161,21 @@ const CreateJobForm = () => {
                 <FormItem>
                   <FormLabel>Job Description</FormLabel>
                   <FormControl>
-                    <JobDescriptionEditor />
+                    <JobDescriptionEditor field={field as any} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="benefits"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Benefits</FormLabel>
+                  <FormControl>
+                    <BenefitsSelector field={field as any} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
