@@ -23,7 +23,7 @@ import {
   Undo,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import TextAlign from "@tiptap/extension-text-align";
+// import TextAlign from "@tiptap/extension-text-align";
 import { Button } from "../ui/button";
 interface iAppProps {
   editor: Editor | null;

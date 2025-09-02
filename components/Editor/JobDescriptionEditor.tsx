@@ -5,7 +5,7 @@ import MenuBar from "./MenuBar";
 import TextAlign from "@tiptap/extension-text-align";
 import Typogrophy from "@tiptap/extension-typography";
 import { ControllerRenderProps } from "react-hook-form";
-import { json } from "stream/consumers";
+
 
 interface iAppProps {
   field: ControllerRenderProps;
@@ -95,7 +95,7 @@ export default JobDescriptionEditor;
 
 // export default JobDescriptionEditor;
 
-//////////
+////////
 
 // import React from "react";
 // import { useEditor, EditorContent } from "@tiptap/react";

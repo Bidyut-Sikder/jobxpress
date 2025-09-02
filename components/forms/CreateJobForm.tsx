@@ -1,7 +1,7 @@
 "use client";
 import { jobSchema } from "@/lib/zodSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
@@ -32,8 +32,26 @@ import { Textarea } from "../ui/textarea";
 import { XIcon } from "lucide-react";
 import { UploadDropzone } from "../general/UploadThingReExported";
 import Image from "next/image";
+import JobListingDurationSelector from "../general/JobListingDurationSelector";
+import { createCompany, createJob } from "@/app/actions";
 
-const CreateJobForm = () => {
+interface iAppProps {
+  companyName: string;
+  companyLocation: string;
+  companyAbout: string;
+  companyLogo: string;
+  companyWebsite: string;
+  companyXAccount: string | null;
+}
+
+const CreateJobForm = ({
+  companyAbout,
+  companyLocation,
+  companyLogo,
+  companyName,
+  companyWebsite,
+  companyXAccount,
+}: iAppProps) => {
   const form = useForm<z.infer<typeof jobSchema>>({
     resolver: zodResolver(jobSchema),
     defaultValues: {
@@ -45,18 +63,35 @@ const CreateJobForm = () => {
       jobDescription: "",
       listingDuration: 0,
       benefits: [],
-      companyName: "",
-      companyLocation: "",
-      companyAbout: "",
-      companyLogo: "",
-      companyWebsite: "",
-      companyXAccount: "",
+      companyName: companyName,
+      companyLocation: companyLocation,
+      companyAbout: companyAbout,
+      companyLogo: companyLogo,
+      companyWebsite: companyWebsite,
+      companyXAccount: companyXAccount || "",
     },
   });
+  const [pending, setPending] = useState(false);
+  const onSubmitHandler = async (values: z.infer<typeof jobSchema>) => {
+    console.log('bidyut')
+    try {
+      setPending(true);
+      await createJob(values);
+    } catch (error) {
+      if (error instanceof Error && error.message !== "NEXT_REDIRECT") {
+        console.log(error);
+      }
+    } finally {
+      setPending(false);
+    }
+  };
 
   return (
     <Form {...form}>
-      <form className="col-span-1 lg:col-span-2 flex flex-col gap-8">
+      <form
+        onSubmit={form.handleSubmit(onSubmitHandler)}
+        className="col-span-1 lg:col-span-2 flex flex-col gap-8"
+      >
         <Card>
           <CardHeader>
             <CardTitle>Job Information</CardTitle>
@@ -163,7 +198,7 @@ const CreateJobForm = () => {
               control={form.control}
               name="jobDescription"
               render={({ field }) => (
-                <FormItem >
+                <FormItem>
                   <FormLabel>Job Description</FormLabel>
                   <FormControl>
                     <JobDescriptionEditor field={field as any} />
@@ -177,7 +212,7 @@ const CreateJobForm = () => {
               control={form.control}
               name="benefits"
               render={({ field }) => (
-                <FormItem >
+                <FormItem>
                   <FormLabel>Benefits</FormLabel>
                   <FormControl>
                     <BenefitsSelector field={field as any} />
@@ -202,8 +237,13 @@ const CreateJobForm = () => {
                   <FormItem>
                     <FormLabel>Company Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Company name..." {...field} />
+                      <Input
+                        disabled
+                        placeholder="Company name..."
+                        {...field}
+                      />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -215,6 +255,7 @@ const CreateJobForm = () => {
                   <FormItem>
                     <FormLabel>Company Location</FormLabel>
                     <Select
+                      disabled
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
@@ -256,7 +297,11 @@ const CreateJobForm = () => {
                   <FormItem>
                     <FormLabel>Company Website</FormLabel>
                     <FormControl>
-                      <Input placeholder="Company Website..." {...field} />
+                      <Input
+                        disabled
+                        placeholder="Company Website..."
+                        {...field}
+                      />
                     </FormControl>
                   </FormItem>
                 )}
@@ -270,6 +315,7 @@ const CreateJobForm = () => {
                     <FormControl>
                       <Input placeholder="Company XAccount" {...field} />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -278,23 +324,25 @@ const CreateJobForm = () => {
               control={form.control}
               name="companyAbout"
               render={({ field }) => (
-                <FormItem >
+                <FormItem>
                   <FormLabel>Company Description</FormLabel>
                   <FormControl>
                     <Textarea
+                      disabled
                       className="min-h-[120px]"
                       placeholder="Tell us about your company"
                       {...field}
                     />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
+             {/* <FormField
               control={form.control}
               name="companyLogo"
               render={({ field }) => (
-                <FormItem >
+                <FormItem>
                   <FormLabel>Company Logo</FormLabel>
                   <FormControl>
                     <div>
@@ -339,13 +387,33 @@ const CreateJobForm = () => {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            />  */}
           </CardContent>
         </Card>
 
+        <Card>
+          <CardHeader>
+            <CardTitle>Job Listing Duration</CardTitle>
+          </CardHeader>
 
-
-
+          <CardContent>
+            <FormField
+              name="listingDuration"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <JobListingDurationSelector field={field as any} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+        </Card>
+        <Button type="submit" className="w-full mb-2" disabled={pending}>
+          {pending ? "Submitting" : "Post Job"}
+        </Button>
       </form>
     </Form>
   );

@@ -6,8 +6,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { prisma } from "@/lib/db";
+import { requireUser } from "@/lib/requireUser";
 import image from "@/public/logo.png";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 import React from "react";
 
 const companies = [
@@ -80,10 +83,38 @@ const stats = [
   },
 ];
 
-const PostJob = () => {
+const getCompany = async (userId: string) => {
+  const data = await prisma.company.findUnique({
+    where: {
+      userId: userId,
+    },
+    select: {
+      name: true,
+      location: true,
+      about: true,
+      logo: true,
+      xAccount: true,
+      website: true,
+    },
+  });
+  if (!data) redirect("/");
+  return data;
+};
+
+const PostJob = async () => {
+  const session = await requireUser();
+  const data = await getCompany(session.id as string);
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-5">
-      <CreateJobForm />
+      <CreateJobForm
+        companyAbout={data.about}
+        companyLocation={data.location}
+        companyLogo={data.logo}
+        companyName={data.name}
+        companyWebsite={data.website}
+        companyXAccount={data.xAccount}
+      />
 
       <div className="col-span-1">
         <Card>
@@ -144,3 +175,94 @@ const PostJob = () => {
 };
 
 export default PostJob;
+
+const dd = {
+  type: "doc",
+  content: [
+    {
+      type: "paragraph",
+      attrs: { textAlign: "left" },
+      content: [
+        { type: "text", marks: [{ type: "bold" }], text: "Title:" },
+        { type: "hardBreak" },
+        {
+          type: "text",
+          text: "Full-Stack Developer for Next.js + Express.js Real Estate Platform",
+        },
+        { type: "hardBreak" },
+        { type: "hardBreak" },
+        { type: "text", text: "Project:" },
+        { type: "hardBreak" },
+        {
+          type: "text",
+          text: "We are building RedaHomes, a bilingual real estate platform. Development is milestone-based (M0–M12) as described in the attached document.",
+        },
+        { type: "hardBreak" },
+        { type: "hardBreak" },
+        { type: "text", text: "Requirements:" },
+        { type: "hardBreak" },
+        {
+          type: "text",
+          text: "Strong skills in Next.js 14, Express.js, PostgreSQL/PostGIS, Redis",
+        },
+        { type: "hardBreak" },
+        {
+          type: "text",
+          text: "Proven experience in performance optimization (Google PageSpeed Insights Mobile ≥80, Desktop ≥90)",
+        },
+        { type: "hardBreak" },
+        { type: "hardBreak" },
+        {
+          type: "text",
+          text: "Deliverables for each milestone: GitHub PR + public preview URL + PSI test evidence",
+        },
+        { type: "hardBreak" },
+        { type: "hardBreak" },
+        {
+          type: "text",
+          text: "Must follow step-by-step milestone development and meet agreed timelines",
+        },
+        { type: "hardBreak" },
+        { type: "hardBreak" },
+        { type: "text", text: "Next Steps:" },
+        { type: "hardBreak" },
+        { type: "text", text: "Please provide:" },
+        { type: "hardBreak" },
+        { type: "hardBreak" },
+        { type: "text", text: "Your GitHub username (for repo access)" },
+        { type: "hardBreak" },
+        { type: "hardBreak" },
+        { type: "text", text: "Estimated timeline per milestone" },
+        { type: "hardBreak" },
+        { type: "hardBreak" },
+        { type: "text", text: "Examples of past performance-focused projects" },
+        { type: "hardBreak" },
+        { type: "hardBreak" },
+        { type: "text", text: "👉 Current website: " },
+        {
+          type: "text",
+          marks: [
+            {
+              type: "link",
+              attrs: {
+                href: "https://redahomes.ca",
+                target: "_blank",
+                rel: "noopener noreferrer nofollow",
+                class: null,
+              },
+            },
+            { type: "bold" },
+            { type: "underline" },
+          ],
+          text: "https://redahomes.ca",
+        },
+        { type: "hardBreak" },
+        {
+          type: "text",
+          text: "📄 Full milestone breakdown is in the attached file.",
+        },
+      ],
+    },
+    { type: "paragraph", attrs: { textAlign: null } },
+  ],
+};

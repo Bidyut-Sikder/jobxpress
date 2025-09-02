@@ -34,7 +34,6 @@ interface iAppProps {
 }
 const BenefitsSelector = ({ field }: iAppProps) => {
   const toggleBenefit = (benefitId: string) => {
-    console.log(field);
     const currentBenefits = field.value || [];
     const newBenefits = currentBenefits.includes(benefitId)
       ? currentBenefits.filter((id: string) => id !== benefitId)
