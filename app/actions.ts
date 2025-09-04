@@ -173,7 +173,7 @@ export const createJob = async (data: z.infer<typeof jobSchema>) => {
             ],
           },
           currency: "USD",
-          unit_amount: findPricingTier.price * 100,
+          unit_amount: findPricingTier.price * 100, //1.00*100=100 we have to make it for database
         },
         quantity: 1,
       },
@@ -185,6 +185,6 @@ export const createJob = async (data: z.infer<typeof jobSchema>) => {
     success_url: `http://localhost:3000/payment/success`,
     cancel_url: `http://localhost:3000/payment/cancel`,
   });
-console.log(stripeCheckoutSession)
+  console.log(stripeCheckoutSession);
   return redirect(stripeCheckoutSession.url as string);
 };
