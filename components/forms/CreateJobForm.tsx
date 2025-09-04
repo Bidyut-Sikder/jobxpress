@@ -73,7 +73,7 @@ const CreateJobForm = ({
   });
   const [pending, setPending] = useState(false);
   const onSubmitHandler = async (values: z.infer<typeof jobSchema>) => {
-    console.log('bidyut')
+  
     try {
       setPending(true);
       await createJob(values);

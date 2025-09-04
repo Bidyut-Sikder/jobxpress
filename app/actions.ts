@@ -85,13 +85,13 @@ export const createJobSeeker = async (
 export const createJob = async (data: z.infer<typeof jobSchema>) => {
   const user = await requireUser();
 
-  // const req = await request();
+  const req = await request();
 
-  // const decision = await aj.protect(req);
+  const decision = await aj.protect(req);
 
-  // if (decision.isDenied()) {
-  //   throw new Error("Forbidden");
-  // }
+  if (decision.isDenied()) {
+    throw new Error("Forbidden");
+  }
 
   const validateData = jobSchema.parse(data);
 
@@ -135,7 +135,7 @@ export const createJob = async (data: z.infer<typeof jobSchema>) => {
     });
   }
 
-  await prisma.jobPost.create({
+  const jobPost = await prisma.jobPost.create({
     data: {
       jobTitle: validateData.jobTitle,
       employmentType: validateData.employmentType,
@@ -147,6 +147,9 @@ export const createJob = async (data: z.infer<typeof jobSchema>) => {
       benefits: validateData.benefits,
       companyId: company.id,
     },
+    select: {
+      id: true,
+    },
   });
 
   const findPricingTier = jobListingDurationPricing.find(
@@ -157,7 +160,7 @@ export const createJob = async (data: z.infer<typeof jobSchema>) => {
     throw new Error("Invalid Listing Duration Selected.");
   }
 
-  const session = await stripe.checkout.sessions.create({
+  const stripeCheckoutSession = await stripe.checkout.sessions.create({
     customer: stripeCustomerId,
     line_items: [
       {
@@ -175,10 +178,13 @@ export const createJob = async (data: z.infer<typeof jobSchema>) => {
         quantity: 1,
       },
     ],
+    metadata: {
+      jobId: jobPost.id,
+    },
     mode: "payment",
     success_url: `http://localhost:3000/payment/success`,
     cancel_url: `http://localhost:3000/payment/cancel`,
   });
-
-  return redirect(session.url as string);
+console.log(stripeCheckoutSession)
+  return redirect(stripeCheckoutSession.url as string);
 };
