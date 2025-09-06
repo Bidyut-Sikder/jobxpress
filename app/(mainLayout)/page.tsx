@@ -1,15 +1,18 @@
-import { Button } from "@/components/ui/button";
+import JobFilters from "@/components/general/JobFilters";
+import JobListings from "@/components/general/JobListings";
+
 import React from "react";
 
-function page() {
+const HomePage = () => {
   return (
-    <div>
-      <h1 className="text-2xl">THis is biyut sikder</h1>
-      <h1 className="text-2xl">This project will be starting at 9pm today</h1>
+    <div className="grid grid-cols-3 gap-8">
+      <JobFilters />
 
-      <Button variant="secondary">bidyut</Button>
+      <div className="col-span-2 flex flex-col gap-6">
+        <JobListings />
+      </div>
     </div>
   );
-}
+};
 
-export default page;
+export default HomePage;

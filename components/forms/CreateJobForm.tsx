@@ -73,7 +73,6 @@ const CreateJobForm = ({
   });
   const [pending, setPending] = useState(false);
   const onSubmitHandler = async (values: z.infer<typeof jobSchema>) => {
-  
     try {
       setPending(true);
       await createJob(values);
@@ -338,7 +337,7 @@ const CreateJobForm = ({
                 </FormItem>
               )}
             />
-             {/* <FormField
+            {/* <FormField
               control={form.control}
               name="companyLogo"
               render={({ field }) => (
