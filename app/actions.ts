@@ -80,6 +80,16 @@ export const createJobSeeker = async (
       },
     },
   });
+
+  //triggering inngest email-sending-function
+  // await inngest.send({
+  //   name: "job-listing-email",
+  //   data: {
+  //     userId: session.id,
+  //     email: session.email,
+  //   },
+  // });
+
   return redirect("/");
 };
 
@@ -195,6 +205,6 @@ export const createJob = async (data: z.infer<typeof jobSchema>) => {
     success_url: `http://localhost:3000/payment/success`,
     cancel_url: `http://localhost:3000/payment/cancel`,
   });
-  console.log(stripeCheckoutSession);
+
   return redirect(stripeCheckoutSession.url as string);
 };

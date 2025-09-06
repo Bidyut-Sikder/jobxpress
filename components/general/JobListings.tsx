@@ -5,6 +5,10 @@ import EmptyState from "./EmptyState";
 import JobCard from "./JobCard";
 
 const JobListings = async () => {
+
+
+
+
   const getData = async () => {
     const data = await prisma.jobPost.findMany({
       where: {
@@ -17,7 +21,7 @@ const JobListings = async () => {
         salaryTo: true,
         employmentType: true,
         location: true,
-        createdAt:true,
+        createdAt: true,
         company: {
           select: {
             name: true,
@@ -53,6 +57,8 @@ const JobListings = async () => {
           title="No Jobs Found."
         />
       )}
+
+     
     </>
   );
 };
