@@ -74,7 +74,7 @@ const BenefitsSelector = ({ field }: iAppProps) => {
 
 export default BenefitsSelector;
 
-const benefits: Benefit[] = [
+export const benefits: Benefit[] = [
   { id: "401k", label: "401(k)", icon: <Briefcase className="w-3 h-3" /> },
   {
     id: "distributed",

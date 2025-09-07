@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { countryList } from "./countriesList";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -26,8 +27,6 @@ export function formatCurrency(amount: number) {
 //     return `Posted ${diffInDays} ago.`;
 //   }
 // };
-
-
 
 export const formatTime = (date: Date) => {
   const now = new Date();
@@ -59,3 +58,12 @@ export const formatTime = (date: Date) => {
     return `Posted ${result} ago.`;
   }
 };
+
+export function getFlagEmoji(location: string) {
+  const cleanLocation = location.trim().toLocaleLowerCase();
+
+  const country = countryList.find((country) =>
+    cleanLocation.includes(country.name.trim().toLocaleLowerCase())
+  );
+  return country?.flagEmoji || "";
+}
