@@ -15,15 +15,16 @@ model User {
   image            String?
   accounts         Account[]
   sessions         Session[]
-  stripeCustomerId String? @unique
+  stripeCustomerId String?   @unique
 
   userType  UserType?
   Company   Company?
   JobSeeker JobSeeker?
 
-  onboardingCompleted Boolean  @default(false)
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
+  onboardingCompleted Boolean         @default(false)
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  savedJobPosts       SavedJobPosts[]
 }
 
 enum UserType {
@@ -107,15 +108,29 @@ model JobPost {
   jobDescription  String
   listingDuration Int
   benefits        String[]
-  status          jobPostStatus @default(DRAFT)
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-  company         Company       @relation(fields: [companyId], references: [id])
+  status          jobPostStatus   @default(DRAFT)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  company         Company         @relation(fields: [companyId], references: [id])
   companyId       String
+  savedJobPosts   SavedJobPosts[]
 }
 
 enum jobPostStatus {
   DRAFT
   ACTIVE
   EXPIRED
+}
+
+model SavedJobPosts {
+  id String @id @default(uuid())
+
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  jobPost   JobPost  @relation(fields: [jobPostId], references: [id])
+  jobPostId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, jobPostId])
 }

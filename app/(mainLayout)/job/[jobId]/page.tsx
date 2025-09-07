@@ -1,8 +1,10 @@
+import { saveJobPost, UnSaveJobPost } from "@/app/actions";
 import { auth } from "@/auth";
 import { benefits } from "@/components/general/BenefitsSelector";
 import JsonToHtml from "@/components/general/JsonToHtml";
+import LikeSubmit from "@/components/general/LikeSubmit";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import arcjet, { detectBot, tokenBucket } from "@/lib/arcjet";
 import { prisma } from "@/lib/db";
@@ -13,6 +15,7 @@ import { request } from "@arcjet/next";
 import { Heart } from "lucide-react";
 
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import React from "react";
 
@@ -27,7 +30,7 @@ const getClient = (session: boolean) => {
   if (session) {
     return aj.withRule(
       tokenBucket({
-        mode: "LIVE",
+        mode: "DRY_RUN",
         capacity: 100,
         interval: 60,
         refillRate: 30,
@@ -36,7 +39,7 @@ const getClient = (session: boolean) => {
   } else {
     return aj.withRule(
       tokenBucket({
-        mode: "LIVE",
+        mode: "DRY_RUN",
         capacity: 100,
         interval: 60,
         refillRate: 10,
@@ -45,36 +48,52 @@ const getClient = (session: boolean) => {
   }
 };
 
-const getJob = async (jobId: string) => {
-  const jobData = await prisma.jobPost.findUnique({
-    where: {
-      id: jobId,
-      status: "ACTIVE",
-    },
-    select: {
-      jobTitle: true,
-      jobDescription: true,
-      salaryFrom: true,
-      salaryTo: true,
-      employmentType: true,
-      location: true,
-      benefits: true,
-      createdAt: true,
-      listingDuration: true,
-      company: {
-        select: {
-          name: true,
-          logo: true,
-          location: true,
-          about: true,
+const getJob = async (jobId: string, userId?: string) => {
+  const [jobData, savedJob] = await Promise.all([
+    await prisma.jobPost.findUnique({
+      where: {
+        id: jobId,
+        status: "ACTIVE",
+      },
+      select: {
+        jobTitle: true,
+        jobDescription: true,
+        salaryFrom: true,
+        salaryTo: true,
+        employmentType: true,
+        location: true,
+        benefits: true,
+        createdAt: true,
+        listingDuration: true,
+        company: {
+          select: {
+            name: true,
+            logo: true,
+            location: true,
+            about: true,
+          },
         },
       },
-    },
-  });
+    }),
+    userId
+      ? await prisma.savedJobPosts.findUnique({
+          where: {
+            userId_jobPostId: {
+              userId: userId,
+              jobPostId: jobId,
+            },
+          },
+          select: {
+            id: true,
+          },
+        })
+      : null,
+  ]);
+
   if (!jobData) {
     return notFound();
   }
-  return jobData;
+  return { jobData, savedJob };
 };
 type Params = Promise<{ jobId: string }>;
 const JobIdPage = async ({ params }: { params: Params }) => {
@@ -88,41 +107,57 @@ const JobIdPage = async ({ params }: { params: Params }) => {
     throw new Error("Not Allowed");
   }
 
-  const job = await getJob(jobId);
+  const { jobData, savedJob } = await getJob(jobId, session?.user?.id);
 
   return (
     <div className="grid lg:grid-cols-3 gap-8 bg-amberr-300">
-      {/* <div className="space-y-8 col-span-2">
+      <div className="space-y-8 col-span-2">
         <div className="flex items-center justify-between">
           <div className="">
-            <h1 className="text-3xl font-bold "> {job.jobTitle}</h1>
+            <h1 className="text-3xl font-bold "> {jobData.jobTitle}</h1>
             <div className="flex items-center gap-2 mt-2">
-              <p className="font-medium"> {job.company.name}</p>
+              <p className="font-medium"> {jobData.company.name}</p>
               <Badge className="rounded-full " variant={"secondary"}>
-                {job.employmentType}
+                {jobData.employmentType}
               </Badge>
               <span className="hidden md:inline text-muted-foreground">*</span>
               <Badge className="rounded-full">
-                {getFlagEmoji(job.location) && (
-                  <span className="mr-1">{getFlagEmoji(job.location)}</span>
+                {getFlagEmoji(jobData.location) && (
+                  <span className="mr-1">{getFlagEmoji(jobData.location)}</span>
                 )}
-                {job.location}
+                {jobData.location}
               </Badge>
             </div>
           </div>
-          <Button variant={"outline"}>
-            <Heart className="size-4" />
-            Save Job
-          </Button>
+
+          {session ? (
+            <form
+              action={
+                savedJob
+                  ? UnSaveJobPost.bind(null, savedJob.id)
+                  : saveJobPost.bind(null, jobId)
+              }
+            >
+              <LikeSubmit savedJob={!!savedJob} />
+            </form>
+          ) : (
+            <Link
+              className={buttonVariants({ variant: "outline" })}
+              href={"/login"}
+            >
+              <Heart className="size-4 " />
+              Save Job
+            </Link>
+          )}
         </div>
         <section>
-          <JsonToHtml json={JSON.parse(job.jobDescription)} />
+          <JsonToHtml json={JSON.parse(jobData.jobDescription)} />
         </section>
         <section>
           <h3 className="font-semibold">Benefits</h3>
           <div className="flex flex-wrap gap-3">
             {benefits.map((benefit) => {
-              const isOffered = job.benefits.includes(benefit.id);
+              const isOffered = jobData.benefits.includes(benefit.id);
 
               return (
                 <Badge
@@ -139,7 +174,7 @@ const JobIdPage = async ({ params }: { params: Params }) => {
             })}
           </div>
         </section>
-      </div> */}
+      </div>
 
       <div className="space-y-6 col-span-1">
         <Card className="p-6">
@@ -164,8 +199,8 @@ const JobIdPage = async ({ params }: { params: Params }) => {
               </span>
               <span className="text-sm ">
                 {new Date(
-                  job.createdAt.getTime() +
-                    job.listingDuration * 24 * 60 * 60 * 1000
+                  jobData.createdAt.getTime() +
+                    jobData.listingDuration * 24 * 60 * 60 * 1000
                 ).toLocaleDateString("en-US", {
                   month: "long",
                   day: "numeric",
@@ -177,7 +212,7 @@ const JobIdPage = async ({ params }: { params: Params }) => {
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground ">Posted on</span>
               <span className="text-sm">
-                {job.createdAt.toLocaleDateString("en-US", {
+                {jobData.createdAt.toLocaleDateString("en-US", {
                   month: "long",
                   day: "numeric",
                   year: "numeric",
@@ -189,16 +224,16 @@ const JobIdPage = async ({ params }: { params: Params }) => {
                 Employment Type
               </span>
               <span className="text-sm">
-                {job.employmentType.toUpperCase()}
+                {jobData.employmentType.toUpperCase()}
               </span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground ">Location</span>
               <span className="text-sm">
-                {getFlagEmoji(job.location) && (
-                  <span className="mr-1">{getFlagEmoji(job.location)}</span>
+                {getFlagEmoji(jobData.location) && (
+                  <span className="mr-1">{getFlagEmoji(jobData.location)}</span>
                 )}{" "}
-                {job.location}
+                {jobData.location}
               </span>
             </div>
           </div>
@@ -209,16 +244,16 @@ const JobIdPage = async ({ params }: { params: Params }) => {
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <Image
-                src={job.company.logo}
+                src={jobData.company.logo}
                 className="rounded-full size-12 "
                 width={48}
                 height={48}
                 alt="company logo"
               />
               <div className="flex flex-col ">
-                <h3 className="font-semibold"> {job.company.name}</h3>
+                <h3 className="font-semibold"> {jobData.company.name}</h3>
                 <p className="text-sm text-muted-foreground line-clamp-2">
-                  {job.company.about}
+                  {jobData.company.about}
                 </p>
               </div>
             </div>

@@ -8,6 +8,7 @@ import { requireUser } from "@/lib/requireUser";
 import { stripe } from "@/lib/stripe";
 import { companySchema, jobSchema, jobSeekerSchema } from "@/lib/zodSchemas";
 import { request } from "@arcjet/next";
+import { revalidatePath } from "next/cache";
 
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -207,4 +208,44 @@ export const createJob = async (data: z.infer<typeof jobSchema>) => {
   });
 
   return redirect(stripeCheckoutSession.url as string);
+};
+
+export const saveJobPost = async (jobId: string) => {
+  const user = await requireUser();
+  const req = await request();
+
+  const decision = await aj.protect(req);
+  if (decision.isDenied()) {
+    throw new Error("Forbidden.");
+  }
+
+  await prisma.savedJobPosts.create({
+    data: {
+      jobPostId: jobId,
+      userId: user.id as string,
+    },
+  });
+  revalidatePath(`/job/${jobId}`);
+};
+
+export const UnSaveJobPost = async (savedJobPostId: string) => {
+  const user = await requireUser();
+  const req = await request();
+
+  const decision = await aj.protect(req);
+  if (decision.isDenied()) {
+    throw new Error("Forbidden.");
+  }
+
+  const data = await prisma.savedJobPosts.delete({
+    where: {
+      id: savedJobPostId,
+      userId: user.id as string,
+    },
+
+    select: {
+      jobPostId: true,
+    },
+  });
+  revalidatePath(`/job/${data.jobPostId}`);
 };
