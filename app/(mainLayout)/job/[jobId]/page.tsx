@@ -1,15 +1,49 @@
+import { auth } from "@/auth";
 import { benefits } from "@/components/general/BenefitsSelector";
 import JsonToHtml from "@/components/general/JsonToHtml";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import arcjet, { detectBot, tokenBucket } from "@/lib/arcjet";
 import { prisma } from "@/lib/db";
+import { requireUser } from "@/lib/requireUser";
 import { getFlagEmoji } from "@/lib/utils";
+import { request } from "@arcjet/next";
 
 import { Heart } from "lucide-react";
+
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import React from "react";
+
+const aj = arcjet.withRule(
+  detectBot({
+    mode: "LIVE",
+    allow: ["CATEGORY:SEARCH_ENGINE", "CATEGORY:PREVIEW"],
+  })
+);
+
+const getClient = (session: boolean) => {
+  if (session) {
+    return aj.withRule(
+      tokenBucket({
+        mode: "LIVE",
+        capacity: 100,
+        interval: 60,
+        refillRate: 30,
+      })
+    );
+  } else {
+    return aj.withRule(
+      tokenBucket({
+        mode: "LIVE",
+        capacity: 100,
+        interval: 60,
+        refillRate: 10,
+      })
+    );
+  }
+};
 
 const getJob = async (jobId: string) => {
   const jobData = await prisma.jobPost.findUnique({
@@ -45,11 +79,20 @@ const getJob = async (jobId: string) => {
 type Params = Promise<{ jobId: string }>;
 const JobIdPage = async ({ params }: { params: Params }) => {
   const { jobId } = await params;
+  const req = await request();
+  const session = await auth();
+
+  const decision = await getClient(!!session).protect(req, { requested: 10 });
+
+  if (decision.isDenied()) {
+    throw new Error("Not Allowed");
+  }
+
   const job = await getJob(jobId);
 
   return (
     <div className="grid lg:grid-cols-3 gap-8 bg-amberr-300">
-      <div className="space-y-8 col-span-2">
+      {/* <div className="space-y-8 col-span-2">
         <div className="flex items-center justify-between">
           <div className="">
             <h1 className="text-3xl font-bold "> {job.jobTitle}</h1>
@@ -96,7 +139,7 @@ const JobIdPage = async ({ params }: { params: Params }) => {
             })}
           </div>
         </section>
-      </div>
+      </div> */}
 
       <div className="space-y-6 col-span-1">
         <Card className="p-6">
