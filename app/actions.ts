@@ -249,3 +249,40 @@ export const UnSaveJobPost = async (savedJobPostId: string) => {
   });
   revalidatePath(`/job/${data.jobPostId}`);
 };
+
+export const UpdateJobPost = async (
+  job: z.infer<typeof jobSchema>,
+  jobId: string
+) => {
+  const user = await requireUser();
+
+  const req = await request();
+
+  const decision = await aj.protect(req);
+
+  if (decision.isDenied()) {
+    throw new Error("Forbidden");
+  }
+
+  const validateData = jobSchema.parse(job);
+
+  const res = await prisma.jobPost.update({
+    where: {
+      id: jobId,
+      company: {
+        userId: user.id,
+      },
+    },
+    data: {
+      jobTitle: validateData.jobTitle,
+      employmentType: validateData.employmentType,
+      location: validateData.location,
+      salaryFrom: validateData.salaryFrom,
+      salaryTo: validateData.salaryTo,
+      jobDescription: validateData.jobDescription,
+      benefits: validateData.benefits,
+    },
+  });
+
+  return redirect("/my-jobs");
+};

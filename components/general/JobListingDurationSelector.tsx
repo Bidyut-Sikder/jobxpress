@@ -30,6 +30,7 @@ const JobListingDurationSelector = ({ field }: iAppProps) => {
           <div key={duration.days.toString()} className="relative">
             {/* Hidden radio item */}
             <RadioGroupItem
+              disabled
               value={duration.days.toString()}
               id={duration.days.toString()}
               className="sr-only"
@@ -45,7 +46,7 @@ const JobListingDurationSelector = ({ field }: iAppProps) => {
                   field.value === duration.days
                     ? "border-primary bg-primary/10"
                     : "hover:bg-secondary/50",
-                  "p-4 border-2 transition-all"
+                  "p-4 border-2 transition-all opacity-70"
                 )}
               >
                 <div className="flex justify-between items-center">
