@@ -29,6 +29,7 @@ export const helloWorld2 = inngest.createFunction(
   }
 );
 
+//for organization 
 export const jobExpiratinHandler = inngest.createFunction(
   {
     id: "job-expiration",
@@ -37,7 +38,7 @@ export const jobExpiratinHandler = inngest.createFunction(
   async ({ event, step }) => {
     const { jobId, expirationDays } = event.data;
 
-    await step.sleep("wait-for-expiration", `${expirationDays}s`);
+    await step.sleep("wait-for-expiration", `${expirationDays}d`);
     await step.run("update-job-status", async () => {
       await prisma.jobPost.update({
         where: {
@@ -54,6 +55,7 @@ export const jobExpiratinHandler = inngest.createFunction(
   }
 );
 
+//for job seekers 
 export const sendPeriodicJobListingEmail = inngest.createFunction(
   {
     id: "job-listing-email",
@@ -69,7 +71,7 @@ export const sendPeriodicJobListingEmail = inngest.createFunction(
 
     while (currentDay < totalDays) {
       // await step.sleep("wait-interval", `5s`);
-      await step.sleep("wait-interval", `${intervalDays}`);
+      await step.sleep("wait-interval", `${intervalDays}d`);
       currentDay += intervalDays;
       const recentJobs = await step.run("fetch-recent-jobs", async () => {
         return await prisma.jobPost.findMany({

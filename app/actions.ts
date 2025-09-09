@@ -266,7 +266,7 @@ export const UpdateJobPost = async (
 
   const validateData = jobSchema.parse(job);
 
-  const res = await prisma.jobPost.update({
+  await prisma.jobPost.update({
     where: {
       id: jobId,
       company: {
@@ -285,4 +285,27 @@ export const UpdateJobPost = async (
   });
 
   return redirect("/my-jobs");
+};
+
+export const DeleteJobPost = async (jobId: string) => {
+  const user = await requireUser();
+
+  const req = await request();
+
+  const decision = await aj.protect(req);
+
+  if (decision.isDenied()) {
+    throw new Error("Forbidden");
+  }
+
+  const res = await prisma.jobPost.delete({
+    where: {
+      id: jobId,
+      company: {
+        userId: user.id,
+      },
+    },
+  });
+
+  return revalidatePath("/my-jobs");
 };

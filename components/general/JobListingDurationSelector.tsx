@@ -8,9 +8,10 @@ import { cn } from "@/lib/utils";
 
 interface iAppProps {
   field: ControllerRenderProps;
+  jobId?: string;
 }
 
-const JobListingDurationSelector = ({ field }: iAppProps) => {
+const JobListingDurationSelector = ({ jobId, field }: iAppProps) => {
   //   Set default value to 30 on first render
   useEffect(() => {
     if (field.value === 0) {
@@ -30,7 +31,7 @@ const JobListingDurationSelector = ({ field }: iAppProps) => {
           <div key={duration.days.toString()} className="relative">
             {/* Hidden radio item */}
             <RadioGroupItem
-              disabled
+              disabled={!!jobId}
               value={duration.days.toString()}
               id={duration.days.toString()}
               className="sr-only"
@@ -46,7 +47,7 @@ const JobListingDurationSelector = ({ field }: iAppProps) => {
                   field.value === duration.days
                     ? "border-primary bg-primary/10"
                     : "hover:bg-secondary/50",
-                  "p-4 border-2 transition-all opacity-70"
+                  `p-4 border-2 transition-all ${jobId && "opacity-70"}`
                 )}
               >
                 <div className="flex justify-between items-center">

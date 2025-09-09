@@ -401,13 +401,13 @@ const EditJobForm = ({ job }: iAppProps) => {
           </CardHeader>
 
           <CardContent>
-            <FormField 
+            <FormField
               name="listingDuration"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <JobListingDurationSelector field={field as any} />
+                    <JobListingDurationSelector jobId={job.id} field={field as any} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -416,7 +416,7 @@ const EditJobForm = ({ job }: iAppProps) => {
           </CardContent>
         </Card>
         <Button type="submit" className="w-full mb-2" disabled={pending}>
-          {pending ? "Submitting" : "Post Job"}
+          {pending ? "Updating..." : "Update"}
         </Button>
       </form>
     </Form>
