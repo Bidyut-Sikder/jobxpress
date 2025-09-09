@@ -29,10 +29,17 @@ export const helloWorld2 = inngest.createFunction(
   }
 );
 
-//for organization 
+//for organization
 export const jobExpiratinHandler = inngest.createFunction(
   {
     id: "job-expiration",
+    cancelOn: [//for cancelling the function if the job is filled before expiration date
+      {
+        event: "job/cancel.expiration", // The event name that cancels this function
+        // Ensure the cancellation event (async) and the triggering event (event)'s reminderId are the same:
+        if: "async.data.jobId == event.data.jobId",
+      },
+    ],
   },
   { event: "trigger/job-expiration" },
   async ({ event, step }) => {
@@ -55,7 +62,7 @@ export const jobExpiratinHandler = inngest.createFunction(
   }
 );
 
-//for job seekers 
+//for job seekers
 export const sendPeriodicJobListingEmail = inngest.createFunction(
   {
     id: "job-listing-email",
@@ -64,7 +71,7 @@ export const sendPeriodicJobListingEmail = inngest.createFunction(
   async ({ event, step }) => {
     const { userId, email } = event.data;
 
-    const totalDays = 30; 
+    const totalDays = 30;
     //emaill will be sent to the jobSeeker every 2 days for 30 days
     const intervalDays = 2;
     let currentDay = 0;
@@ -130,7 +137,7 @@ export const sendPeriodicJobListingEmail = inngest.createFunction(
                       </div>
                     </div>`
             )
-            .join("");   
+            .join("");
 
           await resend.emails.send({
             from: "JobXpress <onboarding@resend.dev>",

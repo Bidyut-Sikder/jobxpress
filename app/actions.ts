@@ -298,12 +298,20 @@ export const DeleteJobPost = async (jobId: string) => {
     throw new Error("Forbidden");
   }
 
-  const res = await prisma.jobPost.delete({
+  await prisma.jobPost.delete({
     where: {
       id: jobId,
       company: {
         userId: user.id,
       },
+    },
+  });
+
+  // cancelling the inngest job expiration function if the job is deleted before expiration date
+  await inngest.send({
+    name: "job/cancel.expiration",
+    data: {
+      jobId: jobId,
     },
   });
 

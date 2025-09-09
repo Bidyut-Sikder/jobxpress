@@ -1,5 +1,6 @@
 import EmptyState from "@/components/general/EmptyState";
 import { Button } from "@/components/ui/button";
+
 import {
   Card,
   CardContent,
@@ -32,6 +33,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import CopyUrl from "@/components/general/CopyUrl";
+import DeleteButton from "@/components/general/DeleteButton";
 
 const getMyJobs = async (userId: string) => {
   const data = await prisma.jobPost.findMany({
