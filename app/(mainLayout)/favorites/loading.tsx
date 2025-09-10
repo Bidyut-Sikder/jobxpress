@@ -1,5 +1,3 @@
-"use client";
-
 import { Card, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -44,3 +42,15 @@ const JobCardSkeleton = () => {
 };
 
 export default JobCardSkeleton;
+
+// import React from 'react'
+// import MyJobListSkeleton from '../my-jobs/loading'
+// import JobListingLoading from '@/components/general/JobListingLoading'
+
+// function loading() {
+//   return (
+//    <JobListingLoading />
+//   )
+// }
+
+// export default loading
