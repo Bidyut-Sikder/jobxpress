@@ -36,6 +36,7 @@ const getFavorites = async (userId: string) => {
 
 const page = async () => {
   const session = await requireUser();
+  await new Promise((res) => setTimeout(res, 2000));
   const data = await getFavorites(session?.id as string);
   if (data.length === 0) {
     return (

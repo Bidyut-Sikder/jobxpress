@@ -43,7 +43,7 @@ const MyJobListSkeleton = () => {
             {Array.from({ length: 5 }).map((_, i) => (
               <TableRow key={i}>
                 <TableCell>
-                  <Skeleton className="h-10 w-10 rounded-full" />
+                  <Skeleton className="h-10 w-10 rounded-md" />
                 </TableCell>
                 <TableCell>
                   <Skeleton className="h-4 w-24" />
