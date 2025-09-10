@@ -5,11 +5,6 @@ import EmptyState from "./EmptyState";
 import JobCard from "./JobCard";
 
 const JobListings = async () => {
-
-
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-
-
   const getData = async () => {
     const data = await prisma.jobPost.findMany({
       where: {
@@ -58,8 +53,6 @@ const JobListings = async () => {
           title="No Jobs Found."
         />
       )}
-
-     
     </>
   );
 };

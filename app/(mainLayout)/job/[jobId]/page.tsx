@@ -108,7 +108,7 @@ const JobIdPage = async ({ params }: { params: Params }) => {
   }
 
   const { jobData, savedJob } = await getJob(jobId, session?.user?.id);
-
+  await new Promise((res) => setTimeout(res, 2000));
   return (
     <div className="grid lg:grid-cols-3 gap-8 bg-amberr-300">
       <div className="space-y-8 col-span-2">
