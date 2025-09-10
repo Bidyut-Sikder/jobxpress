@@ -1,7 +1,8 @@
 import JobFilters from "@/components/general/JobFilters";
+import JobListingLoading from "@/components/general/JobListingLoading";
 import JobListings from "@/components/general/JobListings";
 
-import React from "react";
+import React, { Suspense } from "react";
 
 const HomePage = () => {
   return (
@@ -9,7 +10,9 @@ const HomePage = () => {
       <JobFilters />
 
       <div className="col-span-2 flex flex-col gap-6">
-        <JobListings />
+        <Suspense fallback={<JobListingLoading />}>
+          <JobListings />
+        </Suspense>
       </div>
     </div>
   );

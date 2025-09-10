@@ -44,7 +44,7 @@ const page = async ({ params }: { params: Params }) => {
             action={async () => {
               "use server";
               await DeleteJobPost(jobId);
-              redirect("/my-jobs");
+              // redirect("/my-jobs");
             }}
           >
             <SubmitButton

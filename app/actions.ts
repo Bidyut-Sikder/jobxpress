@@ -315,5 +315,5 @@ export const DeleteJobPost = async (jobId: string) => {
     },
   });
 
-  return revalidatePath("/my-jobs");
+  return redirect("/my-jobs");
 };
