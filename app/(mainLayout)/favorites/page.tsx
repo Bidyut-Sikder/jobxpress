@@ -49,24 +49,19 @@ const page = async () => {
       />
     );
   }
-  
-  return <div className="grid grid-cols-1 mt-5 gap-4">
-    {
-      data.map(favorite=>(
-        <JobCard key={favorite.jobPost.id} job={favorite.jobPost} />
-      ))
-    }
 
-  </div>;
+  return (
+    <div className="grid grid-cols-1 mt-5 gap-4">
+      {data.map((favorite) => (
+        <JobCard key={favorite.jobPost.id} job={favorite.jobPost} />
+      ))}
+    </div>
+  );
 };
 
 export default page;
 
 ////////////////////
-
-
-
-
 
 // import EmptyState from "@/components/general/EmptyState";
 // import { prisma } from "@/lib/db";
@@ -76,7 +71,6 @@ export default page;
 // import { Badge } from "@/components/ui/badge";
 // import { Button } from "@/components/ui/button";
 // import { MapPin, Calendar, Briefcase } from "lucide-react";
-
 
 // const getFavorites = async (userId: string) => {
 //   const favoritePosts = await prisma.savedJobPosts.findMany({
@@ -158,7 +152,7 @@ export default page;
 //                 </div>
 //                 <div className="flex items-center text-sm text-gray-600 gap-2">
 //                   <Calendar className="h-4 w-4" />
-           
+
 //                 </div>
 //                 <div className="flex flex-wrap gap-2">
 //                   <Badge variant="secondary">
@@ -178,5 +172,3 @@ export default page;
 // };
 
 // export default Page;
-
-
