@@ -1,4 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
+
 import { jobSchema } from "@/lib/zodSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
@@ -29,11 +32,8 @@ import JobDescriptionEditor from "../Editor/JobDescriptionEditor";
 import BenefitsSelector from "../general/BenefitsSelector";
 import { Textarea } from "../ui/textarea";
 
-import { XIcon } from "lucide-react";
-import { UploadDropzone } from "../general/UploadThingReExported";
-import Image from "next/image";
 import JobListingDurationSelector from "../general/JobListingDurationSelector";
-import { createCompany, createJob } from "@/app/actions";
+import { createJob } from "@/app/actions";
 
 interface iAppProps {
   companyName: string;

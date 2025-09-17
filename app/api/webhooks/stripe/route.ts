@@ -17,7 +17,10 @@ export async function POST(req: Request) {
       process.env.STRIPE_WEBHOOK_SECRET as string
     );
   } catch (error) {
-    return new Response("Webhook error", { status: 400 });
+    return new Response("Webhook error", {
+      status: 400,
+      statusText: error as string,
+    });
   }
   const session = event.data.object as Stripe.Checkout.Session;
   if (event.type === "checkout.session.completed") {

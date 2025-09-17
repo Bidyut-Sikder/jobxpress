@@ -8,7 +8,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import arcjet, { detectBot, tokenBucket } from "@/lib/arcjet";
 import { prisma } from "@/lib/db";
-import { requireUser } from "@/lib/requireUser";
+
 import { getFlagEmoji } from "@/lib/utils";
 import { request } from "@arcjet/next";
 
@@ -96,6 +96,7 @@ const getJob = async (jobId: string, userId?: string) => {
   return { jobData, savedJob };
 };
 type Params = Promise<{ jobId: string }>;
+
 const JobIdPage = async ({ params }: { params: Params }) => {
   const { jobId } = await params;
   const req = await request();

@@ -6,7 +6,7 @@ import { Button } from "../ui/button";
 import { Heart, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const LikeSubmit = ({ savedJob }: { savedJob: Boolean }) => {
+const LikeSubmit = ({ savedJob }: { savedJob: boolean }) => {
   const { pending } = useFormStatus();
 
   return (

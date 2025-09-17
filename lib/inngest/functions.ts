@@ -69,7 +69,7 @@ export const sendPeriodicJobListingEmail = inngest.createFunction(
   },
   { event: "trigger/job-listing-email" },
   async ({ event, step }) => {
-    const { userId, email } = event.data;
+    const { userId } = event.data;
 
     const totalDays = 30;
     //emaill will be sent to the jobSeeker every 2 days for 30 days

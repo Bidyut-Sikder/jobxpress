@@ -11,7 +11,7 @@ import {
 import { requireUser } from "@/lib/requireUser";
 import { ArrowLeft, TrainIcon } from "lucide-react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+
 import React from "react";
 
 type Params = {

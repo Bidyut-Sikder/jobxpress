@@ -28,12 +28,12 @@ import {
   DropdownMenuContent,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { CopyCheck, MoreHorizontal, PenBox, XCircle } from "lucide-react";
+import {  MoreHorizontal, PenBox, XCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import CopyUrl from "@/components/general/CopyUrl";
-import DeleteButton from "@/components/general/DeleteButton";
+
 
 const getMyJobs = async (userId: string) => {
   const data = await prisma.jobPost.findMany({

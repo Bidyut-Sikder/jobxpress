@@ -1,10 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { requireUser } from "@/lib/requireUser";
 import { Check } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
-const PaymentSuccess = () => {
+const PaymentSuccess = async() => {
+await requireUser()
   return (
     <div className="w-full min-h-screen flex flex-col justify-center items-center px-2">
       <Card className="w-[180px] md:w-[320px] sm:w-[250px] ">

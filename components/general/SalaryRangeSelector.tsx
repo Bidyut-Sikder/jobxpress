@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import { Slider } from "../ui/slider";
 import { Control, useController } from "react-hook-form";
@@ -13,7 +14,7 @@ interface iAppProps {
 
 const SalaryRangeSelector = ({
   control,
-  currency,
+
   maxSalary,
   minSalary,
   step,
