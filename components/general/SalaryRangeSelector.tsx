@@ -9,7 +9,6 @@ interface iAppProps {
   minSalary: number;
   maxSalary: number;
   step: number;
-  currency: string;
 }
 
 const SalaryRangeSelector = ({

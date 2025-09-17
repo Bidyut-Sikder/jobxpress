@@ -14,9 +14,9 @@ import Link from "next/link";
 
 import React from "react";
 
-type Params = {
+type Params = Promise<{
   jobId: string;
-};
+}>;
 
 const page = async ({ params }: { params: Params }) => {
   const { jobId } = await params;
