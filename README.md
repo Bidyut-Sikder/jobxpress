@@ -82,25 +82,6 @@ add scripts in package.json for developement
 "stripe": "stripe listen --forward-to http://localhost:3000/api/webhooks/stripe"
 
 
-# Database
-DATABASE_URL=postgresql://user:password@localhost:5432/jobxpress
-
-# Auth
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your-secret
-
-# Stripe
-STRIPE_SECRET_KEY=your-stripe-secret
-STRIPE_WEBHOOK_SECRET=your-stripe-webhook
-
-# Resend
-RESEND_API_KEY=your-resend-api-key
-
-# UploadThing
-UPLOADTHING_SECRET=your-uploadthing-secret
-UPLOADTHING_APP_ID=your-uploadthing-app-id
-
-
 jobxpress/
 ├── prisma/              # Prisma schema & migrations
 ├── src/
@@ -113,3 +94,41 @@ jobxpress/
 ├── package.json
 ├── tailwind.config.js
 └── tsconfig.json
+
+```
+# .env
+
+```bash
+# auth.js 
+AUTH_SECRET=""
+
+# github developer
+AUTH_GITHUB_ID=
+AUTH_GITHUB_SECRET=
+
+# google cloud console
+AUTH_GOOGLE_ID=
+AUTH_GOOGLE_SECRET=
+
+# Database
+DATABASE_URL=
+# DATABASE_URL="postgresql://postgres:bidyut@localhost:5432/postgres"
+
+# Uploadthing
+UPLOADTHING_TOKEN=
+
+# Arcjet Key
+ARCJET_KEY=ajkey_01k3wv20wvfy8ryg77ae72vb5w
+
+# Stripe Key
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
+
+# Resend Key
+RESEND_API_KEY=
+
+# Localhost
+NEXT_PUBLIC_URL='http://localhost:3000'
+
+```
+
