@@ -4,19 +4,18 @@ import { prisma } from "@/lib/db";
 import EmptyState from "./EmptyState";
 import JobCard from "./JobCard";
 import MainPagination from "./MainPagination";
-import { jobPostStatus } from "@prisma/client";
 
 const getData = async ({
   pageNumber = 1,
   pageSize = 2,
   jobTypes = [],
+  location,
 }: {
   pageNumber: number;
   pageSize: number;
   jobTypes: string[];
+  location?: string;
 }) => {
-  console.log(jobTypes);
-
   const [jobs, totalCount] = await Promise.all([
     prisma.jobPost.findMany({
       where: {
@@ -25,6 +24,11 @@ const getData = async ({
           employmentType: { in: jobTypes },
           //best way to match string employmentType in database with this array of jobTypes
         }),
+
+        ...(location &&
+          location !== "worldwide" && {
+            location: location,
+          }),
       },
       take: pageSize,
       skip: (pageNumber - 1) * pageSize,
@@ -53,6 +57,10 @@ const getData = async ({
       where: {
         status: "ACTIVE",
         ...(jobTypes.length > 0 && { employmentType: { in: jobTypes } }),
+        ...(location &&
+          location !== "worldwide" && {
+            location: location,
+          }),
       },
     }),
   ]);
@@ -60,17 +68,20 @@ const getData = async ({
 };
 
 const JobListings = async ({
+  location,
   currentPage,
   jobTypes,
 }: {
   currentPage: number;
   jobTypes: string[];
+  location?: string;
 }) => {
   await new Promise((resolve) => setTimeout(resolve, 2000));
   const { jobs, totalPages } = await getData({
     pageNumber: currentPage,
     pageSize: 2,
     jobTypes: jobTypes,
+    location: location,
   });
 
   return (

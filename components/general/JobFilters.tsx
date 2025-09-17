@@ -26,6 +26,7 @@ const JobFilters = () => {
   const router = useRouter();
 
   const currentJobTypes = searchParams.get("jobTypes")?.split(",") || [];
+  const currentLocation = searchParams.get("location") || "";
 
   const clearAllFilters = () => {
     router.push("/");
@@ -52,11 +53,15 @@ const JobFilters = () => {
     } else {
       current.delete(jobType);
     }
+
     const newValues = Array.from(current).join(",");
 
     router.push(`/?${createQueryString("jobTypes", newValues)}`);
   }
 
+  const handleLocationChange = (location: string) => {
+    router.push(`/?${createQueryString("location", location)}`);
+  };
   return (
     <Card className="col-span-1 h-fit">
       <CardHeader className="flex flex-row justify-between items-center">
@@ -96,7 +101,7 @@ const JobFilters = () => {
         <Separator />
         <div className="space-y-4">
           <Label className="text-lg font-semibold">Location</Label>
-          <Select>
+          <Select value={currentLocation} onValueChange={(e)=>handleLocationChange(e)}>
             <SelectTrigger>
               <SelectValue placeholder="Select Location" />
             </SelectTrigger>
