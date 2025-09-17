@@ -203,8 +203,8 @@ export const createJob = async (data: z.infer<typeof jobSchema>) => {
       jobId: jobPost.id,
     },
     mode: "payment",
-    success_url: `http://localhost:3000/payment/success`,
-    cancel_url: `http://localhost:3000/payment/cancel`,
+    success_url: `${process.env.NEXT_PUBLIC_URL}/payment/success`,
+    cancel_url: `${process.env.NEXT_PUBLIC_URL}/payment/cancel`,
   });
 
   return redirect(stripeCheckoutSession.url as string);
