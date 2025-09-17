@@ -12,6 +12,9 @@ yarn dev
 pnpm dev
 # or
 bun dev
+    "inngest": "pnpm dlx inngest-cli@latest dev",
+    "stripe": "stripe listen --forward-to http://localhost:3000/api/webhooks/stripe"
+
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
