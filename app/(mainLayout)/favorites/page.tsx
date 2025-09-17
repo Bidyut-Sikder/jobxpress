@@ -1,9 +1,25 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import EmptyState from "@/components/general/EmptyState";
 import JobCard from "@/components/general/JobCard";
 import { prisma } from "@/lib/db";
 import { requireUser } from "@/lib/requireUser";
 import React from "react";
+type Favorite = {
+  jobPost: {
+    id: string;
+    createdAt: Date;
+    company: {
+      name: string;
+      location: string;
+      about: string;
+      logo: string;
+    };
+    jobTitle: string;
+    employmentType: string;
+    location: string;
+    salaryFrom: number;
+    salaryTo: number;
+  };
+};
 
 const getFavorites = async (userId: string) => {
   const favoritePosts = await prisma.savedJobPosts.findMany({
@@ -52,7 +68,7 @@ const page = async () => {
 
   return (
     <div className="grid grid-cols-1 mt-5 gap-4">
-      {data.map((favorite) => (
+      {data.map((favorite: Favorite) => (
         <JobCard key={favorite.jobPost.id} job={favorite.jobPost} />
       ))}
     </div>
