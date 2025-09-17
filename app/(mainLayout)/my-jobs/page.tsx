@@ -33,6 +33,19 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import CopyUrl from "@/components/general/CopyUrl";
+import { jobPostStatus } from "@prisma/client";
+
+type Job = {
+  id: string;
+  createdAt: Date;
+  company: {
+    name: string;
+    logo: string;
+  };
+  jobTitle: string;
+  status: jobPostStatus;
+};
+
 
 
 const getMyJobs = async (userId: string) => {
@@ -97,7 +110,7 @@ const MyJobList = async () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {myJobs.map((job) => (
+            {myJobs.map((job:Job) => (
               <TableRow key={job.id}>
                 <TableCell>
                   <Image
