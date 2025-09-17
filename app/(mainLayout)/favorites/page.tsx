@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import EmptyState from "@/components/general/EmptyState";
 import JobCard from "@/components/general/JobCard";
 import { prisma } from "@/lib/db";
