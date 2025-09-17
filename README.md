@@ -1,39 +1,115 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# JobXpress
 
-## Getting Started
+**JobXpress** is a modern **job portal application** built with **Next.js 15**, **TypeScript**, and **Prisma**.  
+It provides a seamless platform for **organizations** to post jobs and for **job seekers** to find and apply for opportunities.  
 
-First, run the development server:
+---
+
+## 📝 Project Description
+
+JobXpress connects employers with job seekers through a simple and efficient portal:
+
+- **User Roles**:
+  - **Organization**:  
+    - Can create an account as an employer.  
+    - Post job listings with detailed descriptions.  
+    - Each job post requires **payment** based on the duration:  
+      - Example: 6 days, 30 days, 60 days, 90 days.  
+      - Each duration has a **different price**, handled via **Stripe** payments.  
+  - **Job Seeker**:  
+    - Can create an account as a job seeker.  
+    - Browse and apply to job postings.  
+    - Manage profile, including CV/resume and application history.  
+
+- **Business Logic**:
+  - Organizations must **pay before a job post goes live**.  
+  - Job listings automatically **expire after the selected duration**.  
+  - Job seekers can submit applications and track their status.  
+
+This makes JobXpress a complete solution for recruitment, simplifying the process of hiring and applying.
+
+---
+
+## 🚀 Features
+
+- ⚡ **Next.js 15** with Turbopack for blazing-fast development  
+- 🎨 **TailwindCSS 4** + Radix UI for modern, accessible components  
+- 🔒 **Authentication** with NextAuth v5 (Prisma adapter)  
+- 💳 **Stripe integration** for job post payments  
+- 📨 **Email notifications** with Resend + React Email  
+- 📝 **Rich Text Editor** powered by TipTap for job descriptions & profiles  
+- ☁️ **File Uploads** via UploadThing (e.g., resumes, logos)  
+- ⚙️ **Inngest** for background workflows and events  
+- 🌙 Dark mode support with Next Themes  
+- ✅ Form validation with React Hook Form + Zod  
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework**: [Next.js 15](https://nextjs.org/)  
+- **Frontend**: React 19, Radix UI, Lucide Icons, TailwindCSS 4  
+- **Forms & Validation**: React Hook Form, Zod  
+- **Authentication**: NextAuth.js v5 + Prisma Adapter  
+- **Database ORM**: Prisma (PostgreSQL recommended)  
+- **Payments**: Stripe  
+- **Emails**: Resend + React Email  
+- **Uploads**: UploadThing  
+- **Rich Text**: TipTap Editor  
+- **Workflows**: Inngest  
+- **Linting**: ESLint (Next.js config), Prettier (optional)  
+
+---
+
+## 📦 Installation
+
+Clone the repository:
 
 ```bash
-npm run dev
+git clone https://github.com/Bidyut-Sikder/jobxpress.git
+cd jobxpress
+
+
+pnpm install
 # or
-yarn dev
+npm install
 # or
-pnpm dev
-# or
-bun dev
-    "inngest": "pnpm dlx inngest-cli@latest dev",
-    "stripe": "stripe listen --forward-to http://localhost:3000/api/webhooks/stripe"
+yarn install
 
-```
+add scripts in package.json for developement
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+"inngest": "pnpm dlx inngest-cli@latest dev",
+"stripe": "stripe listen --forward-to http://localhost:3000/api/webhooks/stripe"
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Database
+DATABASE_URL=postgresql://user:password@localhost:5432/jobxpress
 
-## Learn More
+# Auth
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your-secret
 
-To learn more about Next.js, take a look at the following resources:
+# Stripe
+STRIPE_SECRET_KEY=your-stripe-secret
+STRIPE_WEBHOOK_SECRET=your-stripe-webhook
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Resend
+RESEND_API_KEY=your-resend-api-key
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# UploadThing
+UPLOADTHING_SECRET=your-uploadthing-secret
+UPLOADTHING_APP_ID=your-uploadthing-app-id
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+jobxpress/
+├── prisma/              # Prisma schema & migrations
+├── src/
+│   ├── app/             # Next.js app router
+│   ├── components/      # Reusable UI components
+│   ├── lib/             # Utilities and helpers             
+│   └── auth.ts/         # for authentication 
+├── public/              # Static assets
+├── .env                 # Environment variables
+├── package.json
+├── tailwind.config.js
+└── tsconfig.json
