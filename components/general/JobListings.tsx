@@ -78,7 +78,7 @@ const JobListings = async ({
   jobTypes: string[];
   location?: string;
 }) => {
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  // await new Promise((resolve) => setTimeout(resolve, 2000));
   const { jobs, totalPages } = await getData({
     pageNumber: currentPage,
     pageSize: 2,
