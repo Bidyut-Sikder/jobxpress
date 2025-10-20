@@ -19,7 +19,7 @@ const JsonToHtml = ({ json }: { json: JSONContent }) => {
           "prose prose-sm sm:prose lg:prose-lg xl:prose-xl dark:prose-invert" +
           "prose-h1:text-gray-500 prose-h2:text-gray-500 prose-h3:text-gray-500 " +
           "prose-h4:text-gray-500 prose-h5:text-gray-500 prose-h6:text-gray-500 " +
-          "prose-p:text-gray-500 " +
+          "prose-p:text-gray-400 " +
           "prose-a:text-blue-400 hover:prose-a:underline " +
           "prose-strong:text-gray-400 prose-em:text-gray-200 prose-del:text-red-400 " 
         
