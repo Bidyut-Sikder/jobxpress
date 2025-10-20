@@ -14,7 +14,7 @@ const LikeSubmit = ({ savedJob }: { savedJob: boolean }) => {
       {pending ? (
         <>
           <Loader2 className="size-4 animate-spin" />
-          <span>Saving...</span>
+          <span>Loading...</span>
         </>
       ) : (
         <>
@@ -23,7 +23,7 @@ const LikeSubmit = ({ savedJob }: { savedJob: boolean }) => {
               savedJob ? "fill-current text-red-500" : "size-4 transition-colors"
             )}
           />
-          {savedJob ? "Saved" : "Save Job"}
+          {savedJob ? "Saved" : "Save"}
         </>
       )}
     </Button>

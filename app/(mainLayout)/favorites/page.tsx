@@ -14,6 +14,7 @@ type Favorite = {
       logo: string;
     };
     jobTitle: string;
+    jobDescription: string;
     employmentType: string;
     location: string;
     salaryFrom: number;
@@ -33,6 +34,7 @@ const getFavorites = async (userId: string) => {
           jobTitle: true,
           salaryFrom: true,
           salaryTo: true,
+          jobDescription: true,
           employmentType: true,
           location: true,
           createdAt: true,

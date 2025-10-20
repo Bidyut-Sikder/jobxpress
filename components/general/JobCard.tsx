@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import { Card, CardHeader } from "../ui/card";
-import {MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "../ui/badge";
 import { formatCurrency, formatTime } from "@/lib/utils";
@@ -15,6 +15,7 @@ interface iAppProps {
     employmentType: string;
     location: string;
     createdAt: Date;
+ 
     company: {
       name: string;
       logo: string;
@@ -53,18 +54,18 @@ const JobCard = ({ job }: iAppProps) => {
                 <span className="hidden md:inline text-muted-foreground">
                   *
                 </span>
-                <Badge className="rounded-full ">{job.location}</Badge>
-                <span className="hidden md:inline text-muted-foreground">
+                {/* <Badge className="rounded-full ">{job.location}</Badge> */}
+                {/* <span className="hidden md:inline text-muted-foreground">
                   *
-                </span>
+                </span> */}
                 <p className="text-sm text-muted-foreground">
                   {formatCurrency(job.salaryFrom)}- {job.salaryTo}
                 </p>
               </div>
             </div>
 
-            <div className="md:ml-auto text-right">
-              <div className="flex items-center gap-2 justify-end">
+            <div className="md:ml-auto md:text-right">
+              <div className="flex items-center gap-2 md:justify-end">
                 <MapPin className="size-4" />
                 <h1>{job.location}</h1>
               </div>
@@ -84,3 +85,92 @@ const JobCard = ({ job }: iAppProps) => {
 };
 
 export default JobCard;
+
+///////////
+
+// import Link from "next/link";
+// import React from "react";
+// import { Card, CardHeader } from "../ui/card";
+// import {MapPin } from "lucide-react";
+// import Image from "next/image";
+// import { Badge } from "../ui/badge";
+// import { formatCurrency, formatTime } from "@/lib/utils";
+
+// interface iAppProps {
+//   job: {
+//     jobTitle: string;
+//     id: string;
+//     salaryFrom: number;
+//     salaryTo: number;
+//     employmentType: string;
+//     location: string;
+//     createdAt: Date;
+//     company: {
+//       name: string;
+//       logo: string;
+//       location: string;
+//       about: string;
+//     };
+//   };
+// }
+
+// const JobCard = ({ job }: iAppProps) => {
+//   return (
+//     <Link href={`/job/${job.id}`}>
+//       <Card className="hover:shadow-lg transition-all duration-400 hover:border-primary">
+//         <CardHeader>
+//           <div className="flex flex-col md:flex-row gap-4">
+//             <Image
+//               src={job.company.logo}
+//               alt={job.company.name}
+//               className="size-12 rounded-lg"
+//               width={48}
+//               height={48}
+//             />
+
+//             <div>
+//               <h1 className="text-xl md:text-2xl font-bold">{job.jobTitle}</h1>
+//               <div className="flex flex-wrap items-center gap-2">
+//                 <p className="text-sm text-muted-foreground">
+//                   {job.company.name}
+//                 </p>
+//                 <span className="hidden md:inline text-muted-foreground">
+//                   *
+//                 </span>
+//                 <Badge className="rounded-full " variant={"secondary"}>
+//                   {job.employmentType}
+//                 </Badge>
+//                 <span className="hidden md:inline text-muted-foreground">
+//                   *
+//                 </span>
+//                 <Badge className="rounded-full ">{job.location}</Badge>
+//                 <span className="hidden md:inline text-muted-foreground">
+//                   *
+//                 </span>
+//                 <p className="text-sm text-muted-foreground">
+//                   {formatCurrency(job.salaryFrom)}- {job.salaryTo}
+//                 </p>
+//               </div>
+//             </div>
+
+//             <div className="md:ml-auto text-right">
+//               <div className="flex items-center gap-2 justify-end">
+//                 <MapPin className="size-4" />
+//                 <h1>{job.location}</h1>
+//               </div>
+//               <p className="text-sm text-muted-foreground md:text-right">
+//                 {formatTime(job.createdAt)}
+//               </p>
+//             </div>
+//           </div>
+
+//           <p className="text-base text-muted-foreground line-clamp-2 !mt-5">
+//             {job.company.about}
+//           </p>
+//         </CardHeader>
+//       </Card>
+//     </Link>
+//   );
+// };
+
+// export default JobCard;
