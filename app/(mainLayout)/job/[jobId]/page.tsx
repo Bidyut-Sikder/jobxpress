@@ -109,7 +109,7 @@ const JobIdPage = async ({ params }: { params: Params }) => {
   }
 
   const { jobData, savedJob } = await getJob(jobId, session?.user?.id);
-  await new Promise((res) => setTimeout(res, 2000));
+  // await new Promise((res) => setTimeout(res, 2000));
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 px-2 sm:px-4 md:px-6 py-4 md:py-8 w-full max-w-screen-xl mx-auto overflow-hidden">
       {/* Left section */}

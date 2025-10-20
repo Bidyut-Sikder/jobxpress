@@ -25,13 +25,13 @@ const HomePage = async ({ searchParams }: { searchParams: searchParams }) => {
       <JobFilters />
 
       <div className="col-span-2 flex flex-col gap-6">
-         <Suspense fallback={<JobListingLoading />} key={filterKey}>
+        <Suspense fallback={<JobListingLoading />} key={filterKey}>
           <JobListings
             currentPage={currentPage}
             jobTypes={jobTypesArray}
             location={location}
           />
-        </Suspense> 
+        </Suspense>
       </div>
     </div>
   );
